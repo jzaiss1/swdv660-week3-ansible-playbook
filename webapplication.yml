@@ -1,8 +1,10 @@
 ---
+# tasks file for helloworld
 
 - hosts: all
   tasks:
   - name: upgrade all packages
+    become: yes
     yum: name=* state=latest
 
   - name: Installing node and npm
