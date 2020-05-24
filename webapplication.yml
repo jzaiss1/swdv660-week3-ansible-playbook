@@ -37,3 +37,10 @@
   - name: restart helloworld
     service: name=helloworld state=restarted
     become: yes
+
+  - name: Installing Mongodb
+    become: yes
+    yum:
+      enablerepo: epel
+      state: installed
+      name: mongodb-org-server-4.0.18
