@@ -16,7 +16,40 @@
       - nodejs
       - npm
 
+  - name: Copying the upstart file
+    become: yes
+    copy:
+      src: /home/ec2-user/swdv660/helloworld.conf
+      dest: /etc/init/helloworld.conf
+      owner: root
+      group: root
+      mode: 0644
+  
+  - name: Create Mongodb 4.0 Repo
+    become: yes
+    copy:
+      src: /home/ec2-user/swdv660/mongodb-org-4.0.repo
+      dest: /etc/yum.repos.d/
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: Installing Mongodb
+    become: yes
+    yum:
+      enablerepo: epel
+      state: installed
+      name: mongodb
+
+  - name: restart helloworld
+    become: yes
+    service:
+      name: helloworld
+      state: started
+
+
   - name: Copying the application file
+    become: yes
     copy:
       src: /home/ec2-user/swdv660/helloworld.js
       dest: /home/ec2-user/
@@ -24,23 +57,3 @@
       group: ec2-user
       mode: 0644
     notify: restart helloworld
-
-  - name: Copying the upstart file
-    become: yes
-    copy:
-      src: /home/ec2-user/swdv660/helloworld.conf
-      dest: /etc/init/
-      owner: root
-      group: root
-      mode: 0644
-  
-  - name: restart helloworld
-    service: name=helloworld state=restarted
-    become: yes
-
-  - name: Installing Mongodb
-    become: yes
-    yum:
-      enablerepo: epel
-      state: installed
-      name: mongodb-org-server-4.0.18
